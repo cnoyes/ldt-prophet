@@ -158,13 +158,13 @@ server <- function(input, output, session) {
     ggplotly(gg, tooltip = "text", dynamicTicks = TRUE, source = src_id) %>%
       toRGB() %>%
       highlight(
-        on = "plotly_click",       # (2) click to select
+        on = "plotly_click",
         off = "plotly_doubleclick",
         dynamic = TRUE,
-        persistent = TRUE,         # keep selections
+        persistent = TRUE,
         color = I("#E11D48"),
-        selected = plotly::attrs_selected(opacity = 1),
-        deselected = plotly::attrs_deselected(opacity = 0.25)
+        opacityDim = 0.25,  # opacity for non-selected traces
+        selected = attrs_selected(opacity = 1)
       ) %>%
       layout(hoverlabel = list(align = "left"),
              margin = list(l = 10, r = 10, t = 10, b = 10))
