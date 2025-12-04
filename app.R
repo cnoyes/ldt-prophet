@@ -2,21 +2,40 @@
 library(shiny)
 library(ggplot2)
 library(scales)
+library(plotly)
 
 # --------------------------- Load data ----------------------------------------
 apostles_with_labels <- readRDS("derived_data/apostles_with_labels.rds")
 
+# Add additional calculated fields for tooltips
+today <- Sys.Date()
+apostles_with_labels$full_name <- paste(apostles_with_labels$First, apostles_with_labels$Last)
+apostles_with_labels$ordained_date_formatted <- format(apostles_with_labels$`Ordained Apostle`, "%B %d, %Y")
+apostles_with_labels$birth_date_formatted <- format(apostles_with_labels$`Birth Date`, "%B %d, %Y")
+apostles_with_labels$years_in_quorum <- as.numeric(floor((today - apostles_with_labels$`Ordained Apostle`) / 365.25))
+apostles_with_labels$seniority <- rank(apostles_with_labels$`Ordained Apostle`, ties.method = "first")
+
 # --------------------------- Plot functions -----------------------------------
 PlotAge <- function(data) {
-  ggplot(data, aes(x = Last, y = Age, fill = Age, label = `Age Label`)) +
+  # Create custom tooltip text
+  data$tooltip_text <- paste0(
+    "<b>", data$full_name, "</b><br>",
+    "Age: ", round(data$Age, 1), " years<br>",
+    "Born: ", data$birth_date_formatted, "<br>",
+    "Ordained: ", data$ordained_date_formatted, "<br>",
+    "Years in Quorum: ", data$years_in_quorum, "<br>",
+    "Seniority: #", data$seniority
+  )
+
+  ggplot(data, aes(x = Last, y = Age, fill = Age, text = tooltip_text)) +
     geom_col(width = 0.7) +
-    geom_text(nudge_y = 2, size = 3.5, fontface = "bold") +
+    geom_text(aes(label = `Age Label`), nudge_y = 2, size = 3.5, fontface = "bold") +
     scale_fill_gradient(low = "#C7E9B4", high = "#081D58", guide = "none") +
     labs(
       x = "",
       y = "Age (years)",
       title = "Current Age of Apostles",
-      subtitle = "Ordered by seniority (ordination date)"
+      subtitle = "Hover for details • Ordered by seniority"
     ) +
     coord_cartesian(ylim = c(50, 105)) +
     theme_minimal(base_size = 13) +
@@ -30,9 +49,19 @@ PlotAge <- function(data) {
 }
 
 PlotProb <- function(data) {
-  ggplot(data, aes(x = Last, y = Prob, fill = Prob, label = `Prob Label`)) +
+  # Create custom tooltip text
+  data$tooltip_text <- paste0(
+    "<b>", data$full_name, "</b><br>",
+    "Probability: ", ifelse(is.na(data$Prob), "—", paste0(round(data$Prob * 100, 1), "%")), "<br>",
+    "Age: ", round(data$Age, 1), " years<br>",
+    "Ordained: ", data$ordained_date_formatted, "<br>",
+    "Years in Quorum: ", data$years_in_quorum, "<br>",
+    "Seniority: #", data$seniority
+  )
+
+  ggplot(data, aes(x = Last, y = Prob, fill = Prob, text = tooltip_text)) +
     geom_col(width = 0.7) +
-    geom_text(nudge_y = .03, size = 3.5, fontface = "bold") +
+    geom_text(aes(label = `Prob Label`), nudge_y = .03, size = 3.5, fontface = "bold") +
     scale_fill_gradient(
       low = "#BAE6FD",
       high = "#0C4A6E",
@@ -44,7 +73,7 @@ PlotProb <- function(data) {
       x = "",
       y = "Probability",
       title = "Succession Probability",
-      subtitle = "Based on actuarial life expectancy modeling"
+      subtitle = "Hover for details • Based on actuarial modeling"
     ) +
     theme_minimal(base_size = 13) +
     theme(
@@ -119,12 +148,12 @@ ui <- fluidPage(
       fluidRow(
         column(6,
           div(class = "plot-container",
-            plotOutput("age_plot", height = "500px")
+            plotlyOutput("age_plot", height = "500px")
           )
         ),
         column(6,
           div(class = "plot-container",
-            plotOutput("prob_plot", height = "500px")
+            plotlyOutput("prob_plot", height = "500px")
           )
         )
       ),
@@ -269,12 +298,24 @@ ui <- fluidPage(
 # --------------------------- Server -------------------------------------------
 server <- function(input, output, session) {
 
-  output$age_plot <- renderPlot({
-    PlotAge(apostles_with_labels)
+  output$age_plot <- renderPlotly({
+    p <- PlotAge(apostles_with_labels)
+    ggplotly(p, tooltip = "text") %>%
+      layout(
+        hoverlabel = list(bgcolor = "white", font = list(size = 12)),
+        margin = list(l = 50, r = 50, t = 80, b = 100)
+      ) %>%
+      config(displayModeBar = FALSE)  # Hide plotly toolbar for cleaner look
   })
 
-  output$prob_plot <- renderPlot({
-    PlotProb(apostles_with_labels)
+  output$prob_plot <- renderPlotly({
+    p <- PlotProb(apostles_with_labels)
+    ggplotly(p, tooltip = "text") %>%
+      layout(
+        hoverlabel = list(bgcolor = "white", font = list(size = 12)),
+        margin = list(l = 50, r = 50, t = 80, b = 100)
+      ) %>%
+      config(displayModeBar = FALSE)  # Hide plotly toolbar for cleaner look
   })
 }
 
