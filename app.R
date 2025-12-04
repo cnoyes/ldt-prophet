@@ -3,9 +3,6 @@ library(shiny)
 library(ggplot2)
 library(scales)
 
-# Set working directory to script location
-setwd("/Users/claynoyes/code/apostles")
-
 # --------------------------- Load data ----------------------------------------
 apostles_with_labels <- readRDS("derived_data/apostles_with_labels.rds")
 
