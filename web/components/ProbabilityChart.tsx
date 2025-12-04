@@ -83,6 +83,7 @@ export default function ProbabilityChart({ apostles }: ProbabilityChartProps) {
             textAnchor="end"
             height={100}
             tick={{ fontSize: 12 }}
+            interval={0}
           />
           <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }} />

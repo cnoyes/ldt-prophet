@@ -83,6 +83,7 @@ export default function AgeChart({ apostles }: AgeChartProps) {
             textAnchor="end"
             height={100}
             tick={{ fontSize: 12 }}
+            interval={0}
           />
           <YAxis domain={[50, 105]} tick={{ fontSize: 12 }} />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }} />
