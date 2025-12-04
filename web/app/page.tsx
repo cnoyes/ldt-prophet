@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-2 sm:px-4 py-8">
+      <div className="container mx-auto px-1 sm:px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-900 mb-2">
@@ -49,10 +49,10 @@ export default async function Home() {
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-white p-2 sm:p-6 rounded-lg shadow-md">
+          <div className="bg-white p-1 sm:p-6 rounded-lg shadow-md">
             <AgeChart apostles={data.apostles} />
           </div>
-          <div className="bg-white p-2 sm:p-6 rounded-lg shadow-md">
+          <div className="bg-white p-1 sm:p-6 rounded-lg shadow-md">
             <ProbabilityChart apostles={data.apostles} />
           </div>
         </div>

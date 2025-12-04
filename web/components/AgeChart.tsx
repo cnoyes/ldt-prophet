@@ -69,7 +69,7 @@ export default function AgeChart({ apostles }: AgeChartProps) {
         Ordered by seniority (ordination date)
       </p>
       <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+        <BarChart data={data} margin={{ top: 20, right: 5, left: 5, bottom: 80 }}>
           <defs>
             <linearGradient id="ageGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#081D58" stopOpacity={1} />
