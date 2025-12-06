@@ -13,7 +13,7 @@ const navItems = [
   { href: 'https://latterdaytools.io', label: 'Home', tool: 'home' },
   { href: 'https://prophet.latterdaytools.io', label: 'Prophet Calculator', tool: 'prophet' },
   { href: 'https://temples.latterdaytools.io', label: 'Temple Tracker', tool: 'temples' },
-  { href: 'https://conference.latterdaytools.io', label: 'Conference Analytics', tool: 'conference', comingSoon: true },
+  { href: 'https://conference.latterdaytools.io', label: 'Conference Analytics', tool: 'conference' },
 ]
 
 export function SiteHeader({ currentTool, className = '' }: SiteHeaderProps) {

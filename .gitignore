@@ -5,3 +5,7 @@
 packrat/
 rsconnect/
 Rplots.pdf
+
+# Test files
+landing/
+*.png
