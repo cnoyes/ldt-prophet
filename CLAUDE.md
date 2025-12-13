@@ -2,6 +2,23 @@
 
 This file provides **mandatory instructions** to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## 🌐 CENTRAL DOCUMENTATION
+
+**BEFORE MAKING ANY CHANGES**, read the ecosystem documentation in ldt-data:
+
+```
+../ldt-data/docs/ECOSYSTEM.md  - All repos and architecture
+../ldt-data/docs/ROADMAP.md    - Phases and priorities
+```
+
+Or on GitHub: https://github.com/cnoyes/ldt-data/tree/main/docs
+
+This ensures you understand how this repo fits into the larger LatterDay Tools ecosystem.
+
+---
+
 ## ⚠️ MANDATORY PRACTICES
 
 **You MUST:**
