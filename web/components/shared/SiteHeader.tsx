@@ -9,7 +9,14 @@ export interface SiteHeaderProps {
   className?: string
 }
 
-const navItems = [
+interface NavItem {
+  href: string
+  label: string
+  tool: string
+  comingSoon?: boolean
+}
+
+const navItems: NavItem[] = [
   { href: 'https://latterdaytools.io', label: 'Home', tool: 'home' },
   { href: 'https://prophet.latterdaytools.io', label: 'Prophet Calculator', tool: 'prophet' },
   { href: 'https://temples.latterdaytools.io', label: 'Temple Tracker', tool: 'temples' },
