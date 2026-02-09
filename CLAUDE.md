@@ -93,7 +93,7 @@ raw_data/ → src/ scripts → derived_data/ → app.R (Shiny)
 **Pipeline Steps** (executed by `run_all.R`):
 1. `src/1_load_apostles.R` - Load and process apostle data
 2. `src/2_fit_death_curve.R` - Fit Weibull distribution to CDC mortality data
-3. `src/3_calculate_prophet.R` - Run Monte Carlo simulations
+3. `src/3_calculate_prophet.R` - Run Monte Carlo simulations + timeline probabilities
 4. `src/4_make_plots.R` - Create plotting functions (used by Shiny app)
 
 ### Shiny Application Structure
@@ -114,11 +114,13 @@ raw_data/ → src/ scripts → derived_data/ → app.R (Shiny)
    - `apostles_with_labels.rds` - Processed apostle data
    - `simulation_results.rds` - Monte Carlo simulation results
    - `weibull_params.rds` - Fitted mortality model parameters
+   - `timeline.rds` - Monthly prophet probabilities over 30 years (who is prophet at each time point)
 
 3. **Simulation Logic**:
    - For each simulation: sample death age for each apostle
    - Determine prophet by succession order (who outlives seniors)
    - Aggregate results across 100,000 simulations
+   - Timeline: for each monthly time point over 30 years, determine who is the most senior living apostle in each simulation
 
 ### Important Files
 
@@ -126,8 +128,10 @@ raw_data/ → src/ scripts → derived_data/ → app.R (Shiny)
 - `run_all.R` - Master script to regenerate all derived data
 - `src/1_load_apostles.R` - Data loading and preprocessing
 - `src/2_fit_death_curve.R` - Mortality model fitting
-- `src/3_calculate_prophet.R` - Monte Carlo simulation engine
+- `src/3_calculate_prophet.R` - Monte Carlo simulation engine + timeline computation
 - `src/4_make_plots.R` - Plotting functions
+- `scripts/export_to_json.R` - Export derived data to JSON for Next.js frontend
+- `web/components/TimelineChart.tsx` - Timeline line chart (prophet probability over time)
 - `raw_data/apostles.csv` - Source data for apostles
 - `raw_data/Table05.csv` - CDC mortality data
 
@@ -160,7 +164,7 @@ apostles.csv → 1_load_apostles.R → apostles_with_labels.rds
 Table05.csv → 2_fit_death_curve.R → weibull_params.rds
                                            ↓
                     3_calculate_prophet.R → simulation_results.rds
-                                           ↓
+                                         ↓ → timeline.rds
                               4_make_plots.R (functions)
                                            ↓
                                         app.R (Shiny UI)

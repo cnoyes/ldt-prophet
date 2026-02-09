@@ -40,10 +40,14 @@ metadata <- list(
   description = "Apostolic succession probability data based on Monte Carlo simulation"
 )
 
+# Load timeline data
+timeline <- readRDS("derived_data/timeline.rds")
+
 # Combine into final structure
 output <- list(
   metadata = metadata,
-  apostles = apostles_json
+  apostles = apostles_json,
+  timeline = timeline
 )
 
 # Export to JSON (both locations)

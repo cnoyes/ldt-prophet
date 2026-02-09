@@ -13,6 +13,11 @@ export interface Apostle {
   probabilityPercent?: number;
 }
 
+export interface TimelineEntry {
+  date: string;
+  [apostleLastName: string]: string | number;
+}
+
 export interface ApostlesData {
   metadata: {
     generatedAt: string;
@@ -21,4 +26,5 @@ export interface ApostlesData {
     description: string;
   };
   apostles: Apostle[];
+  timeline: TimelineEntry[];
 }

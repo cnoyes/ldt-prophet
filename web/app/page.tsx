@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import AgeChart from '@/components/AgeChart';
 import ProbabilityChart from '@/components/ProbabilityChart';
+import TimelineChart from '@/components/TimelineChart';
 import { ApostlesData } from '@/types/apostles';
 
 async function getApostlesData(): Promise<ApostlesData> {
@@ -55,6 +56,11 @@ export default async function Home() {
           <div className="bg-white p-1 sm:p-6 rounded-lg shadow-md">
             <ProbabilityChart apostles={data.apostles} />
           </div>
+        </div>
+
+        {/* Timeline Chart - Full Width */}
+        <div className="bg-white p-1 sm:p-6 rounded-lg shadow-md mb-8">
+          <TimelineChart timeline={data.timeline} apostles={data.apostles} />
         </div>
 
         {/* Key Metrics */}

@@ -54,8 +54,48 @@ for (i in 3:num_apostles) prophet_matrix[, i] <- apply(death_date_matrix[, i] > 
 # convert results back to simulation data frame
 simulation_df$Prophet <- c(t(prophet_matrix))
 
+# --- Timeline: probability of being current prophet at each time point ---
+# Define monthly time points from today through today + 30 years
+today <- Sys.Date()
+time_points <- seq(today, today + 30 * 365.25, by = "month")
+time_points_numeric <- as.numeric(time_points)
+
+# Pre-allocate timeline matrix: rows = time points, cols = apostles
+timeline_matrix <- matrix(0, nrow = length(time_points), ncol = num_apostles)
+
+for (t_idx in seq_along(time_points_numeric)) {
+  t_val <- time_points_numeric[t_idx]
+  # alive_matrix: TRUE if apostle is still alive at time t
+  alive_matrix <- death_date_matrix > t_val
+
+  # For each simulation, find the most senior living apostle (first TRUE column)
+  # max.col with ties.method="first" gives the first TRUE in each row
+  # But we need to handle cases where nobody is alive
+  prophet_at_t <- max.col(alive_matrix, ties.method = "first")
+  # If no one is alive in a row, max.col still returns a value; check row sums
+  any_alive <- rowSums(alive_matrix) > 0
+  prophet_at_t[!any_alive] <- NA
+
+  # Tabulate: count how many times each apostle is prophet
+  for (a in 1:num_apostles) {
+    timeline_matrix[t_idx, a] <- sum(prophet_at_t == a, na.rm = TRUE) / num_sims
+  }
+}
+
+# Build timeline dataframe
+timeline_df <- data.frame(date = as.character(time_points), stringsAsFactors = FALSE)
+for (a in 1:num_apostles) {
+  col_name <- as.character(apostles$Last[a])
+  timeline_df[[col_name]] <- round(timeline_matrix[, a] * 100, 2)
+}
+
+saveRDS(timeline_df, 'derived_data/timeline.rds')
+message("✓ Timeline data saved to derived_data/timeline.rds (",
+        nrow(timeline_df), " time points)")
+
 rm(death_date_matrix)
 rm(prophet_matrix)
+rm(timeline_matrix)
 
 # summarize simulation results
 apostles_with_prob <- simulation_df %>%
