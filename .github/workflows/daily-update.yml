@@ -63,7 +63,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet derived_data/ web/public/apostles.json; then
+          if git diff --quiet derived_data/ web/public/apostles.json public/data/apostles.json; then
             echo "changes=false" >> $GITHUB_OUTPUT
           else
             echo "changes=true" >> $GITHUB_OUTPUT
@@ -74,7 +74,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add derived_data/ web/public/apostles.json
+          git add derived_data/ web/public/apostles.json public/data/apostles.json
           git commit -m "chore: update apostle succession probabilities (daily recalculation)"
           git pull --rebase
           git push
