@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-01-13 15:14:40.673521",
+    "generatedAt": "2026-02-09 20:37:59.061966",
     "totalApostles": 14,
     "simulationRuns": 100000,
     "description": "Apostolic succession probability data based on Monte Carlo simulation"
@@ -12,7 +12,7 @@
       "middleName": "H",
       "lastName": "Oaks",
       "fullName": "Dallin Oaks",
-      "age": 93.4,
+      "age": 93.5,
       "birthDate": "1932-08-12",
       "ordinationDate": "1984-04-07",
       "yearsInQuorum": 41,
@@ -24,13 +24,13 @@
       "middleName": "B",
       "lastName": "Eyring",
       "fullName": "Henry Eyring",
-      "age": 92.6,
+      "age": 92.7,
       "birthDate": "1933-05-31",
       "ordinationDate": "1995-04-01",
       "yearsInQuorum": 30,
       "seniority": 2,
-      "probability": 0.5158,
-      "probabilityPercent": 51.6
+      "probability": 0.5143,
+      "probabilityPercent": 51.4
     },
     {
       "id": 3,
@@ -38,13 +38,13 @@
       "middleName": "F",
       "lastName": "Uchtdorf",
       "fullName": "Dieter Uchtdorf",
-      "age": 85.2,
+      "age": 85.3,
       "birthDate": "1940-11-06",
       "ordinationDate": "2004-10-02",
       "yearsInQuorum": 21,
       "seniority": 3,
-      "probability": 0.5169,
-      "probabilityPercent": 51.7
+      "probability": 0.5202,
+      "probabilityPercent": 52
     },
     {
       "id": 4,
@@ -52,13 +52,13 @@
       "middleName": "A",
       "lastName": "Bednar",
       "fullName": "David Bednar",
-      "age": 73.6,
+      "age": 73.7,
       "birthDate": "1952-06-15",
       "ordinationDate": "2004-10-02",
       "yearsInQuorum": 21,
       "seniority": 4,
-      "probability": 0.6576,
-      "probabilityPercent": 65.8
+      "probability": 0.6537,
+      "probabilityPercent": 65.4
     },
     {
       "id": 5,
@@ -66,12 +66,12 @@
       "middleName": "L",
       "lastName": "Cook",
       "fullName": "Quentin Cook",
-      "age": 85.3,
+      "age": 85.4,
       "birthDate": "1940-09-08",
       "ordinationDate": "2007-10-06",
       "yearsInQuorum": 18,
       "seniority": 5,
-      "probability": 0.1573,
+      "probability": 0.157,
       "probabilityPercent": 15.7
     },
     {
@@ -85,7 +85,7 @@
       "ordinationDate": "2008-04-10",
       "yearsInQuorum": 17,
       "seniority": 6,
-      "probability": 0.2116,
+      "probability": 0.2119,
       "probabilityPercent": 21.2
     },
     {
@@ -94,13 +94,13 @@
       "middleName": "L",
       "lastName": "Andersen",
       "fullName": "Neil Andersen",
-      "age": 74.4,
+      "age": 74.5,
       "birthDate": "1951-08-09",
       "ordinationDate": "2009-04-04",
       "yearsInQuorum": 16,
       "seniority": 7,
-      "probability": 0.3296,
-      "probabilityPercent": 33
+      "probability": 0.3335,
+      "probabilityPercent": 33.4
     },
     {
       "id": 8,
@@ -108,13 +108,13 @@
       "middleName": "A",
       "lastName": "Rasband",
       "fullName": "Ronald Rasband",
-      "age": 74.9,
+      "age": 75,
       "birthDate": "1951-02-06",
       "ordinationDate": "2015-10-03",
       "yearsInQuorum": 10,
       "seniority": 8,
-      "probability": 0.2421,
-      "probabilityPercent": 24.2
+      "probability": 0.2466,
+      "probabilityPercent": 24.7
     },
     {
       "id": 9,
@@ -122,12 +122,12 @@
       "middleName": "E",
       "lastName": "Stevenson",
       "fullName": "Gary Stevenson",
-      "age": 70.4,
+      "age": 70.5,
       "birthDate": "1955-08-06",
       "ordinationDate": "2015-10-03",
       "yearsInQuorum": 10,
       "seniority": 9,
-      "probability": 0.3182,
+      "probability": 0.3177,
       "probabilityPercent": 31.8
     },
     {
@@ -141,8 +141,8 @@
       "ordinationDate": "2015-10-03",
       "yearsInQuorum": 10,
       "seniority": 10,
-      "probability": 0.1853,
-      "probabilityPercent": 18.5
+      "probability": 0.1823,
+      "probabilityPercent": 18.2
     },
     {
       "id": 11,
@@ -155,8 +155,8 @@
       "ordinationDate": "2018-03-31",
       "yearsInQuorum": 7,
       "seniority": 11,
-      "probability": 0.1804,
-      "probabilityPercent": 18
+      "probability": 0.1813,
+      "probabilityPercent": 18.1
     },
     {
       "id": 12,
@@ -164,12 +164,12 @@
       "middleName": "X",
       "lastName": "Soares",
       "fullName": "Ulisses Soares",
-      "age": 67.3,
+      "age": 67.4,
       "birthDate": "1958-10-02",
       "ordinationDate": "2018-03-31",
       "yearsInQuorum": 7,
       "seniority": 12,
-      "probability": 0.2781,
+      "probability": 0.2777,
       "probabilityPercent": 27.8
     },
     {
@@ -178,13 +178,13 @@
       "middleName": "X",
       "lastName": "Kearon",
       "fullName": "Patrick Kearon",
-      "age": 64.5,
+      "age": 64.6,
       "birthDate": "1961-07-18",
       "ordinationDate": "2023-12-08",
       "yearsInQuorum": 2,
       "seniority": 13,
-      "probability": 0.3055,
-      "probabilityPercent": 30.5
+      "probability": 0.3072,
+      "probabilityPercent": 30.7
     },
     {
       "id": 14,
@@ -197,8 +197,8 @@
       "ordinationDate": "2024-11-06",
       "yearsInQuorum": 1,
       "seniority": 14,
-      "probability": 0.3028,
-      "probabilityPercent": 30.3
+      "probability": 0.2992,
+      "probabilityPercent": 29.9
     }
   ]
 }
