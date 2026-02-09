@@ -48,7 +48,7 @@ jobs:
 
       - name: Install R dependencies
         run: |
-          install.packages(c('dplyr', 'tidyr', 'readr', 'lubridate', 'ggplot2', 'MASS', 'scales'))
+          install.packages(c('dplyr', 'tidyr', 'readr', 'lubridate', 'ggplot2', 'MASS', 'scales', 'jsonlite'))
         shell: Rscript {0}
 
       - name: Run calculations with updated ages
@@ -56,10 +56,14 @@ jobs:
           # Recalculate probabilities with current date (ages update daily)
           Rscript run_all.R
 
+      - name: Export data to JSON for web app
+        run: |
+          Rscript scripts/export_to_json.R
+
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet derived_data/; then
+          if git diff --quiet derived_data/ web/public/apostles.json; then
             echo "changes=false" >> $GITHUB_OUTPUT
           else
             echo "changes=true" >> $GITHUB_OUTPUT
@@ -70,7 +74,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add derived_data/
+          git add derived_data/ web/public/apostles.json
           git commit -m "chore: update apostle succession probabilities (daily recalculation)"
           git pull --rebase
           git push

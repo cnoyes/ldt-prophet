@@ -46,11 +46,17 @@ output <- list(
   apostles = apostles_json
 )
 
-# Export to JSON
-output_path <- "public/data/apostles.json"
-dir.create("public/data", recursive = TRUE, showWarnings = FALSE)
-write_json(output, output_path, pretty = TRUE, auto_unbox = TRUE)
+# Export to JSON (both locations)
+web_path <- "web/public/apostles.json"
+legacy_path <- "public/data/apostles.json"
 
-cat("✓ Data exported to", output_path, "\n")
+dir.create(dirname(web_path), recursive = TRUE, showWarnings = FALSE)
+dir.create(dirname(legacy_path), recursive = TRUE, showWarnings = FALSE)
+
+write_json(output, web_path, pretty = TRUE, auto_unbox = TRUE)
+write_json(output, legacy_path, pretty = TRUE, auto_unbox = TRUE)
+
+cat("✓ Data exported to", web_path, "\n")
+cat("✓ Data exported to", legacy_path, "\n")
 cat("  Total apostles:", nrow(apostles_json), "\n")
 cat("  Generated at:", as.character(Sys.time()), "\n")
