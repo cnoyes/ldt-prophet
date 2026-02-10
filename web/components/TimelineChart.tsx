@@ -180,8 +180,15 @@ export default function TimelineChart({ timeline, apostles }: TimelineChartProps
     [sampled, apostleNames, colorMap]
   );
 
+  // Pick the first sampled entry of each calendar year as a tick
+  const seenYears = new Set<number>();
   const yearTicks = sampled
-    .filter((entry) => new Date(entry.date as string).getMonth() === 0)
+    .filter((entry) => {
+      const year = new Date(entry.date as string).getFullYear();
+      if (seenYears.has(year)) return false;
+      seenYears.add(year);
+      return true;
+    })
     .map((entry) => entry.date);
 
   return (
