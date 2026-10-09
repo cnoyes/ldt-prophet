@@ -43,7 +43,9 @@ export function SiteFooter({ className = '' }: SiteFooterProps) {
                 </a>
               </li>
               <li>
-                <span className="text-gray-400">Conference Analytics (Coming Soon)</span>
+                <a href="https://conference.latterdaytools.io" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  Conference Analytics
+                </a>
               </li>
             </ul>
           </div>
