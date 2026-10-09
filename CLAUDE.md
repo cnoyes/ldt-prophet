@@ -215,6 +215,21 @@ Before deploying:
 2. Verify all dependencies are installed
 3. Test locally on port 8080
 
+### Web app (`web/`) → prophet.latterdaytools.io
+
+Next.js app deployed to Vercel project **`web`**, which is **not**
+git-connected — pushing to `master` does not deploy it. It ships only when
+`.github/workflows/daily-update.yml` runs `vercel --prod` (daily 06:00 UTC /
+midnight MST, or on demand: `gh workflow run daily-update.yml -R cnoyes/ldt-prophet`),
+or by hand from a linked checkout: `cd web && vercel link --project web && vercel --prod`.
+
+The workflow also commits regenerated data daily, so `git pull --rebase`
+before pushing a code change.
+
+`web/components/shared/SiteHeader.tsx` / `SiteFooter.tsx` are copies of the
+same files in `ldt-web`, `ldt-temples/temple-web` and `ldt-conference`, not a
+shared package — a nav/footer change must be repeated in all four repos.
+
 ---
 
 ## Troubleshooting
