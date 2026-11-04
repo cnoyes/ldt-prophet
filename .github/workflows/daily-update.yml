@@ -5,6 +5,11 @@ on:
     # Run daily at 6 AM UTC (midnight MST)
     - cron: '0 6 * * *'
   workflow_dispatch: # Allow manual trigger
+    inputs:
+      skip_deploy:
+        description: 'Dry run: run the whole pipeline but do not commit data or deploy to Vercel'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -13,6 +18,12 @@ jobs:
   update-calculations:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # Every package run_all.R + scripts/export_to_json.R need. stringr is a
+      # Suggests of tidyr but required by separate_wider_delim() (#4).
+      # tests/test_workflow_packages.R (ci.yml) checks this list against the
+      # sources. Keep it on one line, space-separated, no comment after it.
+      R_PKGS: dplyr tidyr stringr readr lubridate ggplot2 MASS scales jsonlite
 
     steps:
       - name: Checkout repository
@@ -33,6 +44,12 @@ jobs:
           r-version: '4.4'
           use-public-rspm: true
 
+      # Cached R binaries are built against the runner image's system libraries
+      # (e.g. stringi -> libicu). Key the cache on the image so an ubuntu-latest
+      # migration starts a fresh library instead of restoring one that cannot load.
+      - name: Record runner image for cache key
+        run: echo "IMAGE_OS=${ImageOS:?ImageOS is not set on this runner}" >> "$GITHUB_ENV"
+
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -42,13 +59,26 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-r-4.4-${{ hashFiles('**/DESCRIPTION') }}
+          key: ${{ runner.os }}-${{ env.IMAGE_OS }}-r-4.4-${{ hashFiles('.github/workflows/daily-update.yml') }}
           restore-keys: |
-            ${{ runner.os }}-r-4.4-
+            ${{ runner.os }}-${{ env.IMAGE_OS }}-r-4.4-
 
       - name: Install R dependencies
         run: |
-          install.packages(c('dplyr', 'tidyr', 'readr', 'lubridate', 'ggplot2', 'MASS', 'scales', 'jsonlite'))
+          # Install only what is missing or cannot be loaded (a cached binary
+          # built for another image). Loadable cached packages are kept as-is.
+          pkgs <- strsplit(trimws(Sys.getenv("R_PKGS")), "\\s+")[[1]]
+          todo <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
+          cat("installing:", if (length(todo)) todo else "(nothing, cache is complete)", "\n")
+          if (length(todo)) install.packages(todo)
+        shell: Rscript {0}
+
+      - name: Verify R dependencies load
+        run: |
+          # install.packages() does not error on failure; fail here with a
+          # clear message rather than mid-pipeline.
+          for (p in strsplit(trimws(Sys.getenv("R_PKGS")), "\\s+")[[1]]) loadNamespace(p)
+          cat("All packages load OK\n")
         shell: Rscript {0}
 
       - name: Run calculations with updated ages
@@ -70,7 +100,7 @@ jobs:
           fi
 
       - name: Commit and push if changed
-        if: steps.check_changes.outputs.changes == 'true'
+        if: steps.check_changes.outputs.changes == 'true' && inputs.skip_deploy != true
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
@@ -80,7 +110,7 @@ jobs:
           git push
 
       - name: Deploy to production (if changed)
-        if: steps.check_changes.outputs.changes == 'true'
+        if: steps.check_changes.outputs.changes == 'true' && inputs.skip_deploy != true
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
