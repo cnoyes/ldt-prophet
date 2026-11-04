@@ -17,9 +17,7 @@ permissions:
 jobs:
   update-calculations:
     runs-on: ubuntu-latest
-    # Deploy waits in the Vercel build queue (one concurrent build per account),
-    # which has pushed a 90 s job past 10 min (#6). Historical deploy time ~40 s.
-    timeout-minutes: 20
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -85,4 +83,7 @@ jobs:
         run: |
           npm install -g vercel
           cd web
-          vercel --prod --token=$VERCEL_TOKEN
+          # --no-wait: the account has one concurrent build slot, so waiting
+          # on the queue has timed out this job twice (#6, #10). Vercel builds
+          # and notifies on its own; the step only confirms the upload.
+          vercel --prod --no-wait --token=$VERCEL_TOKEN
