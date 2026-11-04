@@ -17,7 +17,9 @@ permissions:
 jobs:
   update-calculations:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Deploy waits in the Vercel build queue (one concurrent build per account),
+    # which has pushed a 90 s job past 10 min (#6). Historical deploy time ~40 s.
+    timeout-minutes: 20
     env:
       # Every package run_all.R + scripts/export_to_json.R need. stringr is a
       # Suggests of tidyr but required by separate_wider_delim() (#4).
