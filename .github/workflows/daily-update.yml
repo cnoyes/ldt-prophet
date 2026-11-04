@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Allow manual trigger
     inputs:
       skip_deploy:
-        description: 'Run the pipeline and commit data but do not deploy to Vercel'
+        description: 'Dry run: run the whole pipeline but do not commit data or deploy to Vercel'
         type: boolean
         default: false
 
@@ -21,7 +21,8 @@ jobs:
     env:
       # Every package run_all.R + scripts/export_to_json.R need. stringr is a
       # Suggests of tidyr but required by separate_wider_delim() (#4).
-      # tests/test_workflow_packages.R checks this list against the sources.
+      # tests/test_workflow_packages.R (ci.yml) checks this list against the
+      # sources. Keep it on one line, space-separated, no comment after it.
       R_PKGS: dplyr tidyr stringr readr lubridate ggplot2 MASS scales jsonlite
 
     steps:
@@ -43,14 +44,11 @@ jobs:
           r-version: '4.4'
           use-public-rspm: true
 
-      - name: Check workflow installs every package the pipeline needs
-        run: Rscript tests/test_workflow_packages.R
-
       # Cached R binaries are built against the runner image's system libraries
       # (e.g. stringi -> libicu). Key the cache on the image so an ubuntu-latest
       # migration starts a fresh library instead of restoring one that cannot load.
       - name: Record runner image for cache key
-        run: echo "IMAGE_OS=$ImageOS" >> "$GITHUB_ENV"
+        run: echo "IMAGE_OS=${ImageOS:?ImageOS is not set on this runner}" >> "$GITHUB_ENV"
 
       - name: Install system dependencies
         run: |
@@ -67,14 +65,19 @@ jobs:
 
       - name: Install R dependencies
         run: |
-          install.packages(strsplit(Sys.getenv("R_PKGS"), " ")[[1]])
+          # Install only what is missing or cannot be loaded (a cached binary
+          # built for another image). Loadable cached packages are kept as-is.
+          pkgs <- strsplit(trimws(Sys.getenv("R_PKGS")), "\\s+")[[1]]
+          todo <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
+          cat("installing:", if (length(todo)) todo else "(nothing, cache is complete)", "\n")
+          if (length(todo)) install.packages(todo)
         shell: Rscript {0}
 
       - name: Verify R dependencies load
         run: |
-          # install.packages() does not error on failure, and a restored cache
-          # can hold binaries that no longer load; fail here, not mid-pipeline.
-          for (p in strsplit(Sys.getenv("R_PKGS"), " ")[[1]]) loadNamespace(p)
+          # install.packages() does not error on failure; fail here with a
+          # clear message rather than mid-pipeline.
+          for (p in strsplit(trimws(Sys.getenv("R_PKGS")), "\\s+")[[1]]) loadNamespace(p)
           cat("All packages load OK\n")
         shell: Rscript {0}
 
@@ -97,7 +100,7 @@ jobs:
           fi
 
       - name: Commit and push if changed
-        if: steps.check_changes.outputs.changes == 'true'
+        if: steps.check_changes.outputs.changes == 'true' && inputs.skip_deploy != true
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"

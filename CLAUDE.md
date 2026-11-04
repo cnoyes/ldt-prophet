@@ -71,6 +71,17 @@ This will:
 3. Run 100,000 Monte Carlo simulations
 4. Generate all `.rds` files in `derived_data/`
 
+### Tests
+
+```bash
+# Checks .github/workflows/daily-update.yml installs every package the R
+# pipeline needs (base R only). Runs in CI (ci.yml) on every push/PR.
+Rscript tests/test_workflow_packages.R
+```
+
+Adding a package to the pipeline? Add it to `R_PKGS` in
+`.github/workflows/daily-update.yml` or this test fails.
+
 ### Development Setup
 
 ```bash
@@ -222,6 +233,10 @@ git-connected — pushing to `master` does not deploy it. It ships only when
 `.github/workflows/daily-update.yml` runs `vercel --prod` (daily 06:00 UTC /
 midnight MST, or on demand: `gh workflow run daily-update.yml -R cnoyes/ldt-prophet`),
 or by hand from a linked checkout: `cd web && vercel link --project web && vercel --prod`.
+
+To exercise the pipeline from a branch without touching production
+(no data commit, no deploy):
+`gh workflow run daily-update.yml -R cnoyes/ldt-prophet --ref <branch> -f skip_deploy=true`.
 
 The workflow also commits regenerated data daily, so `git pull --rebase`
 before pushing a code change.
