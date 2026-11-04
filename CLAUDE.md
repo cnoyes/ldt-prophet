@@ -74,19 +74,20 @@ This will:
 ### Tests
 
 ```bash
-# Checks .github/workflows/daily-update.yml installs every package the R
-# pipeline needs (base R only). Runs in CI (ci.yml) on every push/PR.
+# Checks DESCRIPTION `Imports` lists every package the R pipeline needs
+# (base R only). Runs in CI (ci.yml) on every push/PR.
 Rscript tests/test_workflow_packages.R
 ```
 
-Adding a package to the pipeline? Add it to `R_PKGS` in
-`.github/workflows/daily-update.yml` or this test fails.
+Adding a package to the pipeline? Add it to `Imports` in `DESCRIPTION` (the
+daily workflow installs exactly that, via r-lib/actions/setup-r-dependencies)
+or this test fails. Shiny-app-only packages go in `Suggests`.
 
 ### Development Setup
 
 ```bash
-# Install required packages
-R -e "install.packages(c('shiny', 'bslib', 'tidyverse', 'scales', 'plotly', 'glue', 'MASS'))"
+# Install pipeline + Shiny app packages (reads DESCRIPTION)
+R -e "install.packages('pak'); pak::local_install_dev_deps()"
 ```
 
 ---
